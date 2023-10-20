@@ -9,11 +9,13 @@ namespace Repository.GenericRepository.Implentations
     {
         private readonly ApplicationDbContext context;
         public IWineryRepository WineryRepository { get; private set; }
+        public ICategoryRepository CategoryRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
             this.context = context;
             WineryRepository = new WineryRepository(this.context);
+            CategoryRepository = new CategoryRepository(this.context);
 
         }
         public void Dispose()

@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace InventorySystem.Areas.Administrator.Controllers
 {
     [Area("Administrator")]
-    public class WineryController : Controller
+    public class CategoryController : Controller
     {
-        private readonly IWineryService service;
+        private readonly ICategoryService service;
 
         public IActionResult Index()
         {
@@ -17,34 +17,34 @@ namespace InventorySystem.Areas.Administrator.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert(WineryRequest winery, CancellationToken cancellationToken)
+        public async Task<IActionResult> Upsert(CategoryRequest category, CancellationToken cancellationToken)
         {
             if (ModelState.IsValid)
             {
-                if (winery.Id == 0)
+                if (category.Id == 0)
                 {
-                    await service.Add(winery, cancellationToken);
-                    TempData[StaticDefination.Successful] = "Successfully created winery";
+                    await service.Add(category, cancellationToken);
+                    TempData[StaticDefination.Successful] = "Successfully created category";
                 }
                 else
                 {
-                    TempData[StaticDefination.Successful] = "Successfully updated winery";
-                    await service.Update(winery.Id, winery, cancellationToken);
+                    TempData[StaticDefination.Successful] = "Successfully updated category";
+                    await service.Update(category.Id, category, cancellationToken);
                 }
 
                 return RedirectToAction(nameof(Index));
             }
-            TempData[StaticDefination.Error] = "Error when trying to save winery information";
-            return View(winery);
+            TempData[StaticDefination.Error] = "Error when trying to save category information";
+            return View(category);
         }
-        public WineryController(IWineryService service)
+        public CategoryController(ICategoryService service)
         {
             this.service = service;
         }
 
         public async Task<IActionResult> Upsert(int? id)
         {
-            WineryResponse result = new();
+            CategoryResponse result = new();
             if (id is not null)
                 result = await service.GetById(id.GetValueOrDefault());
             else
@@ -56,7 +56,7 @@ namespace InventorySystem.Areas.Administrator.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            IEnumerable<WineryResponse> result = await service.GetAll();
+            IEnumerable<CategoryResponse> result = await service.GetAll();
             return Json(new { data = result });
         }
         
@@ -69,7 +69,7 @@ namespace InventorySystem.Areas.Administrator.Controllers
             return Json(new
             {
                 success = result,
-                message = !result ? "Error when trying to remove the Winery" : "Winery successfully deleted"
+                message = !result ? "Error when trying to remove the category" : "category successfully deleted"
             });
         }
         #endregion
