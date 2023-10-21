@@ -63,4 +63,26 @@
     <partial name="_ValidationScriptsPartial" />
 }
 
-  
+<script>
+
+    document.getElementById("name").addEventListener('change', function () {
+        ValidateField();
+    });
+
+    function ValidateField() {
+        var url = '@Url.Content("~/")' + "Administrator/Winery/ValidateNameId";
+        var id = '#id';
+        var name = '#name';
+
+        $.getJSON(url, { id: $(id).val(), name: $(name).val() }, function (data) {
+            $.each(data, function (key, value) {
+                if (value) {
+                    var name = document.getElementById("name");
+                    swal("Error", "¡The winery name already exists!", "error");
+                    name.value = "";
+                }
+            });
+        })
+
+    }
+</script>

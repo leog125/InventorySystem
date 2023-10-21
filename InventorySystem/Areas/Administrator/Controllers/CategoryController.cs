@@ -72,6 +72,12 @@ namespace InventorySystem.Areas.Administrator.Controllers
                 message = !result ? "Error when trying to remove the category" : "category successfully deleted"
             });
         }
+
+        [ActionName("ValidateNameId")]
+        public async Task<IActionResult> ValidateNameId(string name, int id = 0)
+        {
+            return Json(new { data = await service.ValidateNameId(id, name) });
+        }
         #endregion
     }
 }
