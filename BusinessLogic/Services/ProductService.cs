@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Repository.GenericRepository.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,11 @@ namespace BusinessLogic.Services
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
         private readonly IHostEnvironment hostEnvironment;
-        private readonly string relacionProperties = "Mark,Category";
+        private readonly string Wwwroot = "wwwroot";
+        private readonly string relacionProperties = "Category,Mark";
+        private readonly string DropdownListCategory = "Category";
+        private readonly string DropdownListMark = "Mark";
+        private readonly string DropdownListParent = "Product";
 
         public ProductService(IMapper mapper, IUnitOfWork unitOfWork, IHostEnvironment hostEnvironment)
         {
@@ -32,16 +37,17 @@ namespace BusinessLogic.Services
             this.unitOfWork = unitOfWork;
             this.hostEnvironment = hostEnvironment;
         }
-        public async Task<bool> Add(ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken)
+        public async Task<bool> Add(ProductRequest requestDto, IFormFileCollection files, CancellationToken cancellationToken)
         {
-            if (file.Count > 0)
+            if (files.Count > 0)
             {
-                string DirectoryPathImages = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot" + StaticDefination.ImagePath);
+                string DirectoryPathImages = Path.Combine(hostEnvironment.ContentRootPath, Wwwroot + StaticDefination.ImagePath);
                 ProductLogic.CreateDirectoryImages(DirectoryPathImages);
-                ResponseImagesDto response = ProductLogic.SavePicture(new ImagesDto { Files = file, upLoadPath = DirectoryPathImages });
+                ResponseImagesDto response = ProductLogic.SavePicture(new ImagesDto { Files = files, UpLoadPath = DirectoryPathImages });
                 if (response.RequestResponse)
                     requestDto.ImageUrl = response.SavePath;
             }
+
             Product entity = mapper.Map<Product>(requestDto);
             await unitOfWork.ProductRepository.Create(entity, cancellationToken);
             int result = await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -57,29 +63,30 @@ namespace BusinessLogic.Services
 
         public async Task<IEnumerable<ProductResponse>> GetAll()
         {
-            IEnumerable<Product?> data = await unitOfWork.ProductRepository.ReadAll(includeProperties: relacionProperties);
+            IEnumerable<Product> data = await unitOfWork.ProductRepository.ReadAll(includeProperties: relacionProperties);
             IEnumerable<ProductResponse> response = mapper.Map<IEnumerable<ProductResponse>>(data);
             return response;
         }
 
         public async Task<ProductResponse> GetById(int id)
         {
-            Product? entity = await unitOfWork.ProductRepository.ReadById(x => x.Id.Equals(id), includeProperties: string.Empty);
+            Product? entity = await unitOfWork.ProductRepository.ReadById(x => x.Id.Equals(id), includeProperties: relacionProperties);
             ProductResponse responseDto = mapper.Map<ProductResponse>(entity);
             return responseDto;
         }
 
-        public async Task<bool> Update(int id, ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken)
+        public async Task<bool> Update(int id, ProductRequest requestDto, IFormFileCollection files, CancellationToken cancellationToken)
         {
-            if (file.Count > 0)
+            if (files.Count > 0)
             {
-                string DirectoryPathImages = Path.Combine(hostEnvironment.ContentRootPath, "wwwroot" + StaticDefination.ImagePath);
+                string DirectoryPathImages = Path.Combine(hostEnvironment.ContentRootPath, Wwwroot + StaticDefination.ImagePath);
                 ProductLogic.CreateDirectoryImages(DirectoryPathImages);
                 ProductLogic.EraseToRewrite(DirectoryPathImages + requestDto.ImageUrl);
-                ResponseImagesDto response = ProductLogic.SavePicture(new ImagesDto { Files = file, upLoadPath = DirectoryPathImages });
+                ResponseImagesDto response = ProductLogic.SavePicture(new ImagesDto { Files = files, UpLoadPath = DirectoryPathImages });
                 if (response.RequestResponse)
                     requestDto.ImageUrl = response.SavePath;
             }
+
             Product entity = mapper.Map<Product>(requestDto);
             await unitOfWork.ProductRepository.Update(id, entity, cancellationToken);
             int result = await unitOfWork.SaveChangesAsync(cancellationToken);
@@ -88,15 +95,19 @@ namespace BusinessLogic.Services
 
         public async Task<bool> ValidateNameId(int id, string name)
         {
-            IEnumerable<Product?> data = await unitOfWork.ProductRepository.ReadAll();
+            IEnumerable<Product> data = await unitOfWork.ProductRepository.ReadAll();
             IEnumerable<ProductResponse> response = mapper.Map<IEnumerable<ProductResponse>>(data);
             return GenericValidation.ValidateDuplicateNameField(response, id, name);
         }
 
         public SelectListItemViewModel GetAllDropdownList()
         {
-            throw new NotImplementedException();
+            return new SelectListItemViewModel
+            {
+                CategoryDropDownList = unitOfWork.ProductRepository.GetAllDropdownList(DropdownListCategory),
+                MarkDropDownList = unitOfWork.ProductRepository.GetAllDropdownList(DropdownListMark),
+                ParentDropDownList = unitOfWork.ProductRepository.GetAllDropdownList(DropdownListParent)
+            };
         }
-
     }
 }

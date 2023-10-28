@@ -17,13 +17,18 @@ namespace Context.EntityConfiguration
             builder.Property(x => x.State).IsRequired();
             builder.Property(x => x.CategoryId).IsRequired();
             builder.Property(x => x.MarkId).IsRequired();
-            builder.Property(x => x.ParentId).IsRequired();
+            builder.Property(x => x.ParentId).IsRequired(false);
 
-            //relations
-
-            builder.HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(x => x.Mark).WithMany().HasForeignKey(x => x.MarkId).OnDelete(DeleteBehavior.NoAction);
-            builder.HasOne(x => x.Parent).WithMany().HasForeignKey(x => x.ParentId).OnDelete(DeleteBehavior.NoAction);
+            //Relations
+            builder.HasOne(x=>x.Category).WithMany()
+                .HasForeignKey(x=>x.CategoryId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.Mark).WithMany()
+                .HasForeignKey(x => x.MarkId)
+                .OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.Parent).WithMany()
+                .HasForeignKey(x => x.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
