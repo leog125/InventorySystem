@@ -1,6 +1,11 @@
-﻿namespace DataTransferObjets.Dto.ViewModels
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace DataTransferObjets.Dto.ViewModels
 {
     public class SelectListItemViewModel
     {
+        public IEnumerable<SelectListItem> CategoryDropDownList { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> MarkDropDownList { get; set; } = new List<SelectListItem>();
+        public IEnumerable<SelectListItem> ParentDropDownList { get; set; } = new List<SelectListItem>();
     }
 }

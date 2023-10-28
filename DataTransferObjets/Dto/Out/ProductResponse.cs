@@ -1,9 +1,8 @@
-﻿using Context.Entities;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using DataTransferObjets.Dto.ViewModels;
 
 namespace DataTransferObjets.Dto.Out
 {
-    public class ProductResponse
+    public class ProductResponse : SelectListItemViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
