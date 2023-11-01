@@ -8,11 +8,11 @@ namespace BusinessLogic.Contracts
     public interface IInventaryDetailService
     {
         #region CRUD
-        public Task<bool> Add(ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken);
+        public Task<bool> Add(InventaryDetailRequest requestDto, CancellationToken cancellationToken);
         public Task<bool> Delete(int id, CancellationToken cancellationToken);
-        public Task<bool> Update(int id, ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken);
-        public Task<IEnumerable<ProductResponse>> GetAll();
-        public Task<ProductResponse> GetById(int id);
+        public Task<bool> Update(int id, InventaryDetailRequest requestDto, CancellationToken cancellationToken);
+        public Task<IEnumerable<InventaryDetailResponse>> GetAll();
+        public Task<InventaryDetailResponse> GetById(int id);
         #endregion
 
         public SelectListItemViewModel GetAllDropdownList();

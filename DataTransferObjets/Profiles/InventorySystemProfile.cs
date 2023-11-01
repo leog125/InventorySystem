@@ -18,12 +18,15 @@ namespace DataTransferObjets.Profiles
             CreateMap<ProductRequest, Product>()
                 .ForMember(o => o.SerialNumber, b => b.MapFrom(z => z.Name));
 
-
             CreateMap<Product, ProductResponse>()
-                .ForMember(o=>o.Name,b=>b.MapFrom(z=>z.SerialNumber))
+                .ForMember(o => o.Name, b => b.MapFrom(z => z.SerialNumber))
                 .ForMember(o => o.CategoryName, b => b.MapFrom(z => z.Category.Name))
                 .ForMember(o => o.MarkName, b => b.MapFrom(z => z.Mark.Name))
                 .ForMember(o => o.ParentName, b => b.MapFrom(z => z.Parent.SerialNumber));
+
+            CreateMap<InventaryDetailRequest, InventaryDetail>();
+            CreateMap<InventaryDetail, InventaryDetailResponse>()
+                .ForMember(o => o.ProductName, b => b.MapFrom(z => z.Product.SerialNumber));
         }
     }
 }

@@ -24,7 +24,7 @@ namespace BusinessLogic.Services
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
         }
-        public Task<bool> Add(ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken)
+        public Task<bool> Add(InventaryDetailRequest requestDto, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -34,7 +34,7 @@ namespace BusinessLogic.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<ProductResponse>> GetAll()
+        public Task<IEnumerable<InventaryDetailResponse>> GetAll()
         {
             throw new NotImplementedException();
         }
@@ -44,12 +44,12 @@ namespace BusinessLogic.Services
             throw new NotImplementedException();
         }
 
-        public Task<ProductResponse> GetById(int id)
+        public Task<InventaryDetailResponse> GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> Update(int id, ProductRequest requestDto, IFormFileCollection file, CancellationToken cancellationToken)
+        public Task<bool> Update(int id, InventaryDetailRequest requestDto, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
