@@ -1,15 +1,8 @@
-﻿using Context.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataTransferObjets.Dto.ViewModels;
 
 namespace DataTransferObjets.Dto.Out
 {
-    public class InventaryDetailResponse
+    public class InventaryDetailResponse : SelectListItemViewModelInventaryDetail
     {
         public int Id { get; set; }
         public int InventaryId { get; set; }
