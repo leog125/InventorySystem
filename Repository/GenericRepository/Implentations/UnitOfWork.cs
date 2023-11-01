@@ -12,6 +12,7 @@ namespace Repository.GenericRepository.Implentations
         public ICategoryRepository CategoryRepository { get; private set; }
         public IMarkRepository MarkRepository { get; private set; }
         public IProductRepository ProductRepository { get; private set; }
+        public IInventayDetailRepository InventayDetailRepository { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -20,6 +21,7 @@ namespace Repository.GenericRepository.Implentations
             CategoryRepository = new CategoryRepository(this.context);
             MarkRepository = new MarkRepository(this.context);
             ProductRepository = new ProductRepository(this.context);
+            InventayDetailRepository = new InventayDetailRepository(this.context);
         }
         public void Dispose()
         {
