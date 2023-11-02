@@ -15,6 +15,6 @@ namespace BusinessLogic.Contracts
         public Task<InventaryDetailResponse> GetById(int id);
         #endregion
 
-        public SelectListItemViewModel GetAllDropdownList();
+        public SelectListItemViewModelInventaryDetail GetAllDropdownList();
     }
 }

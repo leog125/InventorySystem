@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.Contracts;
+using Context.Entities;
 using DataTransferObjets.Dto.In;
 using DataTransferObjets.Dto.Out;
 using DataTransferObjets.Dto.ViewModels;
@@ -18,40 +19,58 @@ namespace BusinessLogic.Services
     {
         private readonly IMapper mapper;
         private readonly IUnitOfWork unitOfWork;
+        private readonly string DropdownListInventary = "Inventary";
+        private readonly string DropdownListProduct = "Product";
 
         public InventaryDetailService(IMapper mapper, IUnitOfWork unitOfWork)
         {
             this.mapper = mapper;
             this.unitOfWork = unitOfWork;
         }
-        public Task<bool> Add(InventaryDetailRequest requestDto, CancellationToken cancellationToken)
+        public async Task<bool> Add(InventaryDetailRequest requestDto, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            InventaryDetail entity = mapper.Map<InventaryDetail>(requestDto);
+            await unitOfWork.InventayDetailRepository.Create(entity, cancellationToken);
+            int result = await unitOfWork.SaveChangesAsync(cancellationToken);
+            return result > 0;
         }
 
-        public Task<bool> Delete(int id, CancellationToken cancellationToken)
+        public async Task<bool> Delete(int id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await unitOfWork.InventayDetailRepository.Delete(id, cancellationToken);
+            int result = await unitOfWork.SaveChangesAsync(cancellationToken);
+            return result > 0;
         }
 
-        public Task<IEnumerable<InventaryDetailResponse>> GetAll()
+        public async Task<IEnumerable<InventaryDetailResponse>> GetAll()
         {
-            throw new NotImplementedException();
+            IEnumerable<InventaryDetail?> data = await unitOfWork.InventayDetailRepository.ReadAll();
+            IEnumerable<InventaryDetailResponse> response = mapper.Map<IEnumerable<InventaryDetailResponse>>(data);
+            return response;
         }
 
-        public SelectListItemViewModel GetAllDropdownList()
+        public SelectListItemViewModelInventaryDetail GetAllDropdownList()
         {
-            throw new NotImplementedException();
+            return new SelectListItemViewModelInventaryDetail
+            {
+                InventaryDropDownList = unitOfWork.ProductRepository.GetAllDropdownList(DropdownListInventary),
+                ProductDropDownList = unitOfWork.ProductRepository.GetAllDropdownList(DropdownListProduct)
+            };
         }
 
-        public Task<InventaryDetailResponse> GetById(int id)
+        public async Task<InventaryDetailResponse> GetById(int id)
         {
-            throw new NotImplementedException();
+            InventaryDetail? entity = await unitOfWork.InventayDetailRepository.ReadById(x => x.Id.Equals(id), includeProperties: string.Empty);
+            InventaryDetailResponse responseDto = mapper.Map<InventaryDetailResponse>(entity);
+            return responseDto;
         }
 
-        public Task<bool> Update(int id, InventaryDetailRequest requestDto, CancellationToken cancellationToken)
+        public async Task<bool> Update(int id, InventaryDetailRequest requestDto, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            InventaryDetail entity = mapper.Map<InventaryDetail>(requestDto);
+            await unitOfWork.InventayDetailRepository.Update(id, entity, cancellationToken);
+            int result = await unitOfWork.SaveChangesAsync(cancellationToken);
+            return result > 0;
         }
     }
 }
